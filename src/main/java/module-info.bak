@@ -1,0 +1,7 @@
+module com.chaostek.polloniumfantasy {
+    requires javafx.controls;
+    requires javafx.fxml;
+
+    opens com.chaostek.polloniumfantasy to javafx.fxml;
+    exports com.chaostek.polloniumfantasy;
+}
