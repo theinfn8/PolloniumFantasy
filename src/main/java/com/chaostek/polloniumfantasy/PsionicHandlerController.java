@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -15,7 +16,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -32,11 +32,11 @@ public class PsionicHandlerController implements Initializable
     final String regex = "^[a-zA-Z0-9,+\\-\\s\\.]+$";
     
     @FXML TreeView psionicTree;
-    @FXML TextField txtName, txtID, txtRange, txtDuration;
+    @FXML TextField txtName, txtRange, txtDuration;
     @FXML TextField txtISP, txtSavingThrow, txtTrance;
     @FXML TextArea txtText;
     
-    @FXML Button cmdSave, cmdOpen, cmdExit, cmdCommit;
+    @FXML Button cmdSave, cmdSaveAs, cmdOpen, cmdExit, cmdCommit;
     @FXML Button cmdAdd, cmdUpdate, cmdRemove, cmdNewCat, cmdCancel, cmdClear;
     
     private boolean areEntriesBad()
@@ -77,16 +77,6 @@ public class PsionicHandlerController implements Initializable
     {
         return strNum.matches("\\d+");
         
-        /*try
-        {
-            int i = Integer.parseInt(strNum);
-        }
-        catch (NumberFormatException | NullPointerException nfe)
-        {
-            return false;
-        }
-        return true;
-        */
     }
     
     private void clearTextFields()
@@ -178,6 +168,33 @@ public class PsionicHandlerController implements Initializable
     }
     
     @FXML
+    private void cmdSaveAsAction(ActionEvent event)
+    {
+        final FileChooser fc = new FileChooser();
+        fc.setTitle("Select Psionic XML File");
+        //fc.setInitialDirectory(new File("./res"));
+        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML file", "*.xml"));
+        
+        //File returnVal = fc.showOpenDialog(skillStage);
+        File returnVal = fc.showSaveDialog(psionicStage);
+        
+        if (returnVal != null)
+        {
+            gamePsionicsList.saveAs(returnVal.getPath());
+            gamePsionicsList.saveToXML();
+            
+        }
+        else
+        {
+            System.out.println("Cancel selected.");
+            
+        }
+        
+        cmdSave.setDisable(false);
+        
+    }
+    
+    @FXML
     private void cmdClearAction() throws IOException
     {
         clearTextFields();
@@ -196,13 +213,6 @@ public class PsionicHandlerController implements Initializable
     @FXML
     private void cmdNewCatAction() throws IOException
     {
-        /*if (txtName.getText().isEmpty())
-        {
-            System.out.println("You need a name for the category");
-            return;
-            
-        }
-        */
         TextInputDialog inputDialog = new TextInputDialog();
         inputDialog.setContentText("Enter the name of the category:");
         inputDialog.setHeaderText("Name required");
@@ -216,12 +226,6 @@ public class PsionicHandlerController implements Initializable
             psionicTree.getRoot().getChildren().add(new TreeItem(newCat));
             psionicTree.refresh();
         }
-    }
-    
-    @FXML
-    private void cmdLoadAction() throws IOException
-    {
-        
     }
     
     @FXML
@@ -342,6 +346,9 @@ public class PsionicHandlerController implements Initializable
                 handlerMode = editMode.READ;
                 break;
         }
+        
+        cmdSave.setDisable(false);
+        
     }
     
     @FXML
@@ -370,6 +377,7 @@ public class PsionicHandlerController implements Initializable
         cycleTextFields(); // Should shut them all off to input
         cmdCancel.setDisable(true);
         cmdCommit.setDisable(true);
+        cmdSave.setDisable(true);
         
         psionicTree.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<TreeItem<psionic>>()
         {
