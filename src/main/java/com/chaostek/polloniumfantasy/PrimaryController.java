@@ -18,4 +18,11 @@ public class PrimaryController {
         App.setRoot("PsionicHandler");
         
     }
+
+    @FXML
+    private void switchToSpellHandler() throws IOException
+    {
+        App.setRoot("SpellHandler");
+        
+    }
 }
