@@ -1,6 +1,8 @@
 package com.chaostek.polloniumfantasy;
 
 import java.io.IOException;
+import java.nio.file.*;
+
 import javafx.scene.control.TreeItem;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -56,7 +58,16 @@ public class spellsCollection extends DefaultHandler
     public void openXML(String file)
     {
         spellFile = file;
+        //new File checkFile = File(spellFile);
+        Path tempPath = Paths.get(file);
+        
         if (!root.getChildren().isEmpty()) { root = new TreeItem<>(new spell()); }
+        if (Files.notExists(tempPath))
+        {
+            return;
+            
+        }
+        
         parseDocument();
         
     }
