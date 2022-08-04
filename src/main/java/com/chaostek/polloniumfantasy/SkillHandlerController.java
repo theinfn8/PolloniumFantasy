@@ -13,12 +13,11 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.ToolBar;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -36,8 +35,8 @@ public class SkillHandlerController implements Initializable {
     skillsCollection gameSkillsList;
     skill selectedSkill;
     
-    @FXML MenuBar mnuMain;
-    @FXML MenuItem mniOpen, mniSave, mniSaveAs, mniExit;
+    @FXML ToolBar barMain;
+    @FXML Button cmdOpen, cmdSave, cmdSaveAs, cmdExit;
     
     @FXML Button cmdClear, cmdRemove, cmdNewCat, cmdLoad, cmdUpdate, cmdAdd, cmdAddSub, cmdRemoveSub, cmdModifySub;
     @FXML ComboBox<book> cboSourceBooks;
@@ -53,14 +52,14 @@ public class SkillHandlerController implements Initializable {
     @FXML TableColumn<subSkill, Integer> subSkillBase, subSkillPerLevel;
     
     @FXML
-    private void mniExitAction(ActionEvent event) throws IOException
+    private void cmdExitAction(ActionEvent event) throws IOException
     {
         App.setRoot("primary");
         
     }
     
     @FXML
-    private void mniOpenAction(ActionEvent event)
+    private void cmdOpenAction(ActionEvent event)
     {
         final FileChooser fc = new FileChooser();
         fc.setTitle("Select Skill XML File");
@@ -81,19 +80,19 @@ public class SkillHandlerController implements Initializable {
             System.out.println("Cancel selected.");
         }
         
-        mniSave.setDisable(false);
+        cmdSave.setDisable(false);
         
     }
     
     @FXML
-    private void mniSaveAction(ActionEvent event)
+    private void cmdSaveAction(ActionEvent event)
     {
         gameSkillsList.saveToXML();
         
     }
     
     @FXML
-    private void mniSaveAsAction(ActionEvent event)
+    private void cmdSaveAsAction(ActionEvent event)
     {
         final FileChooser fc = new FileChooser();
         fc.setTitle("Select Skill XML File");
@@ -115,13 +114,7 @@ public class SkillHandlerController implements Initializable {
             
         }
         
-        mniSave.setDisable(false);
-        
-    }
-    
-    @FXML
-    private void mniAboutAction(ActionEvent event)
-    {
+        cmdSave.setDisable(false);
         
     }
     
@@ -406,7 +399,7 @@ public class SkillHandlerController implements Initializable {
         cboSourceBooks.setItems(gameBooks.getBooks());
         cboSourceBooks.getSelectionModel().selectFirst();
         
-        mniSave.setDisable(true);
+        cmdSave.setDisable(true);
         cmdAddSub.setDisable(false);
         cmdRemoveSub.setDisable(false);
         cmdModifySub.setDisable(false);
