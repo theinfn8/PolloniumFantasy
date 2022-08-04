@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -146,6 +147,33 @@ public class SpellHandlerController implements Initializable
     private void cmdSaveAction() throws IOException
     {
         gameSpellsList.saveToXML();
+        
+    }
+    
+    @FXML
+    private void cmdSaveAsAction(ActionEvent event)
+    {
+        final FileChooser fc = new FileChooser();
+        fc.setTitle("Select Psionic XML File");
+        //fc.setInitialDirectory(new File("./res"));
+        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML file", "*.xml"));
+        
+        //File returnVal = fc.showOpenDialog(skillStage);
+        File returnVal = fc.showSaveDialog(spellStage);
+        
+        if (returnVal != null)
+        {
+            gameSpellsList.saveAs(returnVal.getPath());
+            gameSpellsList.saveToXML();
+            
+        }
+        else
+        {
+            System.out.println("Cancel selected.");
+            
+        }
+        
+        cmdSave.setDisable(false);
         
     }
     
