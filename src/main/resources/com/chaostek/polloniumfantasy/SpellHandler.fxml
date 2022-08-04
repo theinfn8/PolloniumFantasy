@@ -13,87 +13,94 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.FlowPane?>
 
-<VBox fx:id="skillFrame" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/13" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chaostek.polloniumfantasy.SpellHandlerController">
-   <children>
-      <ToolBar prefHeight="40.0" prefWidth="200.0">
-        <items>
-          <Button mnemonicParsing="false" onAction="#cmdSaveAction" text="Save" fx:id="cmdSave" />
-          <Button mnemonicParsing="false" onAction="#cmdOpenAction" text="Open" fx:id="cmdOpen" />
-          <Button mnemonicParsing="false" onAction="#cmdExitAction" text="Exit" fx:id="cmdExit" />
-        </items>
-      </ToolBar>
-      <HBox prefHeight="600.0" prefWidth="800.0">
-         <children>
-            <AnchorPane prefHeight="200.0" prefWidth="400.0">
-               <children>
-                  <VBox AnchorPane.LeftAnchor="2.0">
-                  <GridPane>
-                    <columnConstraints>
-                      <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" />
-                      <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" />
-                        <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" />
-                        <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" />
-                    </columnConstraints>
-                    <rowConstraints>
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                    </rowConstraints>
-                     <padding>
-                        <Insets bottom="1.0" left="2.0" right="1.0" top="1.0" />
-                     </padding>
-                     <children>
-                        <Button text="Commit" fx:id="cmdCommit" mnemonicParsing="false" GridPane.columnIndex="3" GridPane.columnSpan="2" onAction="#cmdCommitAction" />
-                        <Label text="Name:" GridPane.rowIndex="1" />
-                        <TextField fx:id="txtName" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <Label text="ISP:" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                        <TextField fx:id="txtISP" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                        <Label text="Range:" GridPane.rowIndex="2" />
-                        <TextField fx:id="txtRange" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="2" />
-                        <TextField fx:id="txtDuration" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="3" />
-                        <Label text="Duration:" GridPane.rowIndex="3" />
-                        <TextField fx:id="txtTrance" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="4" />
-                        <Label text="Length of Trance:" GridPane.rowIndex="4" />
-                        <TextField fx:id="txtSavingThrow" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="5" />
-                        <Label text="Saving Throw:" GridPane.rowIndex="5" />
-                     </children>
-                  </GridPane>
-                  <Label text="Description:" />
-                  <TextArea fx:id="txtText" VBox.vgrow="ALWAYS" />
-                </VBox>
-               </children>
-            </AnchorPane>
-            <AnchorPane>
-                <VBox AnchorPane.LeftAnchor="1" AnchorPane.RightAnchor="1">
+<BorderPane fx:id="skillFrame" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/13" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chaostek.polloniumfantasy.SpellHandlerController">
+   <top>
+        <ToolBar prefHeight="40.0" prefWidth="200.0">
+            <items>
+                <Button mnemonicParsing="false" onAction="#cmdSaveAction" text="Save" fx:id="cmdSave" />
+                <Button mnemonicParsing="false" text="Save As…" fx:id="cmdSaveAs" onAction="#cmdSaveAsAction"/>
+                <Button mnemonicParsing="false" onAction="#cmdOpenAction" text="Open" fx:id="cmdOpen" />
+                <Button mnemonicParsing="false" onAction="#cmdExitAction" text="Exit" fx:id="cmdExit" />
+            </items>
+        </ToolBar>
+    </top>
+    <center>
+        <FlowPane>
+            <HBox prefHeight="600.0" prefWidth="800.0">
                 <children>
-                    <GridPane>
-                        <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        </columnConstraints>
-                        <rowConstraints>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        </rowConstraints>
+                    <AnchorPane prefHeight="200.0" prefWidth="400.0">
                         <children>
-                           <Button fx:id="cmdClear" onAction="#cmdClearAction" mnemonicParsing="false" prefHeight="26.0" prefWidth="100" text="Clear" />
-                           <Button fx:id="cmdCancel" onAction="#cmdCancelAction" mnemonicParsing="false" prefHeight="26.0" prefWidth="100" text="Cancel" GridPane.columnIndex="1" />
-                           <Button fx:id="cmdNewCat" onAction="#cmdNewCatAction" mnemonicParsing="false" prefHeight="26.0" prefWidth="100" text="New Cat" GridPane.columnIndex="2" />
-                           <Button fx:id="cmdAdd" onAction="#cmdAddAction" mnemonicParsing="false" prefHeight="26.0" prefWidth="100" text="Add" GridPane.rowIndex="1" />
-                           <Button fx:id="cmdUpdate" onAction="#cmdUpdateAction" mnemonicParsing="false" prefHeight="26.0" prefWidth="100" text="Update" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                           <Button fx:id="cmdRemove" onAction="#cmdRemoveAction" mnemonicParsing="false" prefHeight="26.0" prefWidth="100" text="Remove" GridPane.rowIndex="1" GridPane.columnIndex="2" />
+                            <VBox AnchorPane.LeftAnchor="2.0">
+                                <GridPane>
+                                    <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100" />
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100" />
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="50" />
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100" />
+                                    </columnConstraints>
+                                    <rowConstraints>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    </rowConstraints>
+                                    <padding>
+                                        <Insets bottom="1.0" left="2.0" right="1.0" top="1.0" />
+                                    </padding>
+                                    <children>
+                                        <Button text="Commit" fx:id="cmdCommit" mnemonicParsing="false" GridPane.columnIndex="3" GridPane.columnSpan="2" onAction="#cmdCommitAction" />
+                                        <Label text="Name:" GridPane.rowIndex="1" />
+                                        <TextField fx:id="txtName" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                        <Label text="PPE:" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                        <TextField fx:id="txtPPE" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                                        <Label text="Range:" GridPane.rowIndex="2" />
+                                        <TextField fx:id="txtRange" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="2" />
+                                        <TextField fx:id="txtDuration" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="3" />
+                                        <Label text="Duration:" GridPane.rowIndex="3" />
+                                        <TextField fx:id="txtLevel" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="4" />
+                                        <Label text="Level:" GridPane.rowIndex="4" />
+                                        <TextField fx:id="txtSavingThrow" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="5" />
+                                        <Label text="Saving Throw:" GridPane.rowIndex="5" />
+                                    </children>
+                                </GridPane>
+                                <Label text="Description:" />
+                                <TextArea fx:id="txtText" VBox.vgrow="ALWAYS" />
+                            </VBox>
                         </children>
-                    </GridPane>
-                     <TreeView fx:id="psionicTree" AnchorPane.BottomAnchor="1.0" AnchorPane.RightAnchor="2" />
+                    </AnchorPane>
+                    <AnchorPane>
+                        <VBox AnchorPane.LeftAnchor="1" AnchorPane.RightAnchor="1">
+                            <children>
+                                <GridPane>
+                                    <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                    </columnConstraints>
+                                    <rowConstraints>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    </rowConstraints>
+                                    <children>
+                                    <Button fx:id="cmdClear" onAction="#cmdClearAction" mnemonicParsing="false" prefHeight="26.0" prefWidth="100" text="Clear" />
+                                    <Button fx:id="cmdCancel" onAction="#cmdCancelAction" mnemonicParsing="false" prefHeight="26.0" prefWidth="100" text="Cancel" GridPane.columnIndex="1" />
+                                    <Button fx:id="cmdNewCat" onAction="#cmdNewCatAction" mnemonicParsing="false" prefHeight="26.0" prefWidth="100" text="New Cat" GridPane.columnIndex="2" />
+                                    <Button fx:id="cmdAdd" onAction="#cmdAddAction" mnemonicParsing="false" prefHeight="26.0" prefWidth="100" text="Add" GridPane.rowIndex="1" />
+                                    <Button fx:id="cmdUpdate" onAction="#cmdUpdateAction" mnemonicParsing="false" prefHeight="26.0" prefWidth="100" text="Update" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                    <Button fx:id="cmdRemove" onAction="#cmdRemoveAction" mnemonicParsing="false" prefHeight="26.0" prefWidth="100" text="Remove" GridPane.rowIndex="1" GridPane.columnIndex="2" />
+                                    </children>
+                                </GridPane>
+                                <TreeView fx:id="spellTree" AnchorPane.BottomAnchor="1.0" AnchorPane.RightAnchor="2" />
+                            </children>
+                        </VBox>
+                    </AnchorPane>
                 </children>
-                </VBox>
-            </AnchorPane>
-         </children>
-      </HBox>
-   </children>
-</VBox>
+            </HBox>
+        </FlowPane>
+    </center>
+</BorderPane>
