@@ -30,7 +30,7 @@ public class SpellHandlerController implements Initializable
     spellsCollection gameSpellsList;
     spell selectedSpell;
     editMode handlerMode;
-    final String regex = "^[a-zA-Z0-9,+\\-\\s\\.]+$";
+    final String regex = "^[a-zA-Z0-9,+\\-\\s\\.\\(\\)\\:\\;\\%]+$";
     
     @FXML TreeView spellTree;
     @FXML TextField txtName, txtID, txtRange, txtDuration;
@@ -316,11 +316,25 @@ public class SpellHandlerController implements Initializable
                 }
                 else if (currentSpell.getValue().isLevel())
                 {
-                    currentSpell.getChildren().add(new TreeItem(newSpell));
+                    if (currentSpell.getValue().getName().matches(txtLevel.getText()))
+                    {
+                        currentSpell.getChildren().add(new TreeItem(newSpell));
+                    } else
+                    {
+                        TreeItem<spell> foundLevel = gameSpellsList.findLevelByCat(currentSpell.getParent().getValue().getName(), txtLevel.getText());
+                        foundLevel.getChildren().add(new TreeItem(newSpell));
+                    }
                 }
                 else
                 {
-                    currentSpell.getParent().getChildren().add(new TreeItem(newSpell));
+                    if (currentSpell.getParent().getValue().getName().matches(txtLevel.getText()))
+                    {
+                        currentSpell.getParent().getChildren().add(new TreeItem(newSpell));
+                    } else
+                    {
+                        TreeItem<spell> foundLevel = gameSpellsList.findLevelByCat(currentSpell.getParent().getParent().getValue().getName(), txtLevel.getText());
+                        foundLevel.getChildren().add(new TreeItem(newSpell));
+                    }
                 }
 
                 spellTree.refresh();
