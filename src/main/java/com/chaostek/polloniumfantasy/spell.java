@@ -14,6 +14,17 @@ public class spell
     private String range, duration, savingThrow, listName;
     private String ppe, level;
     private boolean isCat;
+    private boolean isLevel;
+
+    public boolean isLevel()
+    {
+        return isLevel;
+    }
+
+    public void setIsLevel(boolean isLevel)
+    {
+        this.isLevel = isLevel;
+    }
     
     spell()
     {
@@ -74,6 +85,7 @@ public class spell
     @Override
     public String toString()
     {
+        if (isCat || isLevel) return name;
         return name + " (PPE: " + ppe + ")";
         
     }

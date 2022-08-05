@@ -64,6 +64,11 @@ public class SpellHandlerController implements Initializable
             return true;
         }
         
+        if (isNumeric(txtLevel.getText()))
+        {
+            txtLevel.setText("Level " + txtLevel.getText());
+        }
+        
         if (txtPPE.getText().isEmpty()) txtPPE.setText("0");
         
         if (!isNumeric(txtPPE.getText()))
@@ -252,12 +257,6 @@ public class SpellHandlerController implements Initializable
     }
     
     @FXML
-    private void cmdLoadAction() throws IOException
-    {
-        
-    }
-    
-    @FXML
     private void cmdCancelAction() throws IOException
     {
         actionButtonsOn();
@@ -309,7 +308,13 @@ public class SpellHandlerController implements Initializable
                 newSpell.setLevel(txtLevel.getText());
                 newSpell.setText(txtText.getText());
 
+                
                 if (currentSpell.getValue().isCat())
+                {
+                    TreeItem<spell> foundLevel = gameSpellsList.findLevelByCat(currentSpell.getValue().getName(), txtLevel.getText());
+                    foundLevel.getChildren().add(new TreeItem(newSpell));
+                }
+                else if (currentSpell.getValue().isLevel())
                 {
                     currentSpell.getChildren().add(new TreeItem(newSpell));
                 }

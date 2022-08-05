@@ -2,6 +2,7 @@ package com.chaostek.polloniumfantasy;
 
 import java.io.IOException;
 import java.nio.file.*;
+import javafx.collections.ObservableList;
 
 import javafx.scene.control.TreeItem;
 
@@ -55,6 +56,59 @@ public class spellsCollection extends DefaultHandler
         
     }
     
+    public TreeItem<spell> findLevelByCat(String searchCat, String searchLevel)
+    {
+        ObservableList<TreeItem<spell>> categories;
+        TreeItem<spell> result;
+        //TreeItem<spell> searchSpell;
+        
+        categories = root.getChildren();
+        for(TreeItem<spell> cat : categories)
+        {
+            if (cat.getValue().getName().equals(searchCat))
+            {
+                ObservableList<TreeItem<spell>> levels;
+                levels = cat.getChildren();
+                for (TreeItem<spell> ilevel : levels)
+                {
+                    if (ilevel.getValue().getName().equals(searchLevel))
+                    {
+                        // Found our cat and level, return it
+                        return ilevel;
+                    }
+                }
+                // If we get here, we didn't find the level
+                // so we add it, and return that node!
+                spell newLevel = new spell();
+                newLevel.setName(searchLevel);
+                newLevel.generateUUID();
+                //newLevel.setCat(true);
+                newLevel.setIsLevel(true);
+                result = new TreeItem(newLevel);
+                cat.getChildren().add(result);
+                return result;
+            }
+        }
+        // If we get here, we didn't find the category (which shouldn't happen)
+        // So add the category, then the level, and return the level
+        spell newCat = new spell();
+        newCat.setName(searchCat);
+        newCat.generateUUID();
+        newCat.setCat(true);
+        TreeItem<spell> treeCat = new TreeItem(newCat);
+        root.getChildren().add(treeCat);
+        
+        spell newLevel = new spell();
+        newLevel.setName(searchLevel);
+        newLevel.generateUUID();
+        //newLevel.setCat(true);
+        newLevel.setIsLevel(true);
+        result = new TreeItem(newLevel);
+        treeCat.getChildren().add(result);
+        return result;
+        
+    }
+    
     public void openXML(String file)
     {
         spellFile = file;
@@ -104,6 +158,7 @@ public class spellsCollection extends DefaultHandler
         {
             categoryTmp = new spell(attributes.getValue("id"), attributes.getValue("name"), true);
             catNode = new TreeItem(categoryTmp);
+            root.getChildren().add(catNode);
             
         }
         
@@ -117,11 +172,11 @@ public class spellsCollection extends DefaultHandler
     @Override
     public void endElement(String s, String s1, String element) throws SAXException
     {
-        if (element.equalsIgnoreCase("category"))
+        /*if (element.equalsIgnoreCase("category"))
         {
             root.getChildren().add(catNode);
             
-        }
+        }*/
         
         if (element.equalsIgnoreCase("range"))
         {
@@ -153,7 +208,10 @@ public class spellsCollection extends DefaultHandler
         }
         if (element.equalsIgnoreCase("spell"))
         {
-            catNode.getChildren().add(new TreeItem<>(spellTmp));
+            //spellTmp.setIsLevel(true);
+            TreeItem<spell> addLevel = findLevelByCat(catNode.getValue().getName(), spellTmp.getLevel());
+            //catNode.getChildren().add(addLevel);
+            addLevel.getChildren().add(new TreeItem<>(spellTmp));
             
         }
     }
@@ -191,11 +249,9 @@ public class spellsCollection extends DefaultHandler
             Element rootElement = doc.createElement("spells");
             doc.appendChild(rootElement);
             
-            for (int i = 0; i < root.getChildren().size(); i++)
+            for (TreeItem<spell> categoryNode : root.getChildren())
             {
-                catNode = root.getChildren().get(i);
-                categoryTmp = catNode.getValue();
-                
+                categoryTmp = categoryNode.getValue();
                 
                 Element categoryElement = doc.createElement("category");
                 attrTmp = doc.createAttribute("name");
@@ -206,15 +262,15 @@ public class spellsCollection extends DefaultHandler
                 categoryElement.setAttributeNode(attrTmp);
                 rootElement.appendChild(categoryElement);
                 
-                if (!catNode.getChildren().isEmpty())
+                if (!categoryNode.getChildren().isEmpty())
                 {
-                    for (int j = 0; j < catNode.getChildren().size(); j++)
+                    for (TreeItem<spell> newLevel : categoryNode.getChildren())
                     {
-                        spellNode = catNode.getChildren().get(j);
-                        spellTmp = spellNode.getValue();
-                        
-                        categoryElement.appendChild(buildPsionicNode(doc));
-                        
+                        for (TreeItem<spell> spellNode : newLevel.getChildren())
+                        {
+                            categoryElement.appendChild(buildSpellNode(doc, spellNode.getValue()));
+
+                        }
                     }
                 }
                 
@@ -238,30 +294,30 @@ public class spellsCollection extends DefaultHandler
         }   
     }
     
-    private Element buildPsionicNode(Document doc)
+    private Element buildSpellNode(Document doc, spell addSpell)
     {
         // Skill element creation
         Element spellElement = doc.createElement("spell");
-        spellElement.setAttribute("id", spellTmp.getID());
-        spellElement.setAttribute("name", spellTmp.getName());
+        spellElement.setAttribute("id", addSpell.getID());
+        spellElement.setAttribute("name", addSpell.getName());
 
         Element xmlSpell = doc.createElement("range");
-        xmlSpell.appendChild(doc.createTextNode(spellTmp.getRange()));
+        xmlSpell.appendChild(doc.createTextNode(addSpell.getRange()));
         spellElement.appendChild(xmlSpell);
         xmlSpell = doc.createElement("duration");
-        xmlSpell.appendChild(doc.createTextNode(spellTmp.getDuration()));
+        xmlSpell.appendChild(doc.createTextNode(addSpell.getDuration()));
         spellElement.appendChild(xmlSpell);
         xmlSpell = doc.createElement("savingthrow");
-        xmlSpell.appendChild(doc.createTextNode(spellTmp.getSavingThrow()));
+        xmlSpell.appendChild(doc.createTextNode(addSpell.getSavingThrow()));
         spellElement.appendChild(xmlSpell);
         xmlSpell = doc.createElement("level");
-        xmlSpell.appendChild(doc.createTextNode(spellTmp.getLevel()));
+        xmlSpell.appendChild(doc.createTextNode(addSpell.getLevel()));
         spellElement.appendChild(xmlSpell);
         xmlSpell = doc.createElement("ppe");
-        xmlSpell.appendChild(doc.createTextNode(spellTmp.getPpe()));
+        xmlSpell.appendChild(doc.createTextNode(addSpell.getPpe()));
         spellElement.appendChild(xmlSpell);
         xmlSpell = doc.createElement("text");
-        xmlSpell.appendChild(doc.createTextNode(spellTmp.getText()));
+        xmlSpell.appendChild(doc.createTextNode(addSpell.getText()));
         spellElement.appendChild(xmlSpell);
         
         return spellElement;
