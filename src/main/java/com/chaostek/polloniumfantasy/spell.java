@@ -29,12 +29,14 @@ public class spell
     spell()
     {
         isCat = false;
+        isLevel = false;
         
     }
     
     spell(String id, String name)
     {
         isCat = false;
+        isLevel = false;
         this.id = UUID.fromString(id);
         this.name = name;
         
