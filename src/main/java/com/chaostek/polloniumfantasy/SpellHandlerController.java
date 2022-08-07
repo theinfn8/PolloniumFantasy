@@ -348,32 +348,48 @@ public class SpellHandlerController implements Initializable
                 
             case UPDATE:
                 // Update spell
-                if (currentSpell.getValue().isCat())
-                {
-                    // TODO Add better error handling communication'
-                    //System.out.println("Cannot have a Category selected");
-
-                    selectedSpell = currentSpell.getValue();
-                    selectedSpell.setName(txtName.getText());
-
-                }
-                else if (areEntriesBad())
+                if (areEntriesBad())
                 {
                     System.out.println("Text entries are incorrect");
-
+                    return;
                 }
-                else
+                
+                if (currentSpell.getValue().isCat() || currentSpell.getValue().isLevel())
                 {
-                    selectedSpell = currentSpell.getValue();
+                    currentSpell.getValue().setName(txtName.getText());
+                    
+                } else
+                {
+                    if (currentSpell.getValue().getLevel().matches(txtLevel.getText()))
+                    {
+                        selectedSpell = currentSpell.getValue();
 
-                    selectedSpell.setName(txtName.getText());
-                    selectedSpell.setPpe(txtPPE.getText());
-                    selectedSpell.setDuration(txtDuration.getText());
-                    selectedSpell.setRange(txtRange.getText());
-                    selectedSpell.setSavingThrow(txtSavingThrow.getText());
-                    selectedSpell.setLevel(txtLevel.getText());
-                    selectedSpell.setText(txtText.getText());
+                        selectedSpell.setName(txtName.getText());
+                        selectedSpell.setPpe(txtPPE.getText());
+                        selectedSpell.setDuration(txtDuration.getText());
+                        selectedSpell.setRange(txtRange.getText());
+                        selectedSpell.setSavingThrow(txtSavingThrow.getText());
+                        selectedSpell.setLevel(txtLevel.getText());
+                        selectedSpell.setText(txtText.getText());
+                                
+                    } else
+                    {
+                        TreeItem<spell> newLevel = gameSpellsList.findLevelByCat(currentSpell.getParent().getParent().getValue().getName(), txtLevel.getText());
+                        spell updateSpell = new spell();
 
+                        updateSpell.setId(currentSpell.getValue().getId());
+                        updateSpell.setName(txtName.getText());
+                        updateSpell.setPpe(txtPPE.getText());
+                        updateSpell.setDuration(txtDuration.getText());
+                        updateSpell.setRange(txtRange.getText());
+                        updateSpell.setSavingThrow(txtSavingThrow.getText());
+                        updateSpell.setLevel(txtLevel.getText());
+                        updateSpell.setText(txtText.getText());
+                        
+                        newLevel.getChildren().add(new TreeItem(updateSpell));
+                        currentSpell.getParent().getChildren().remove(currentSpell);
+                        
+                    }
                 }
 
                 spellTree.refresh();
@@ -401,6 +417,7 @@ public class SpellHandlerController implements Initializable
     {
         actionButtonsOff();
         cycleTextFields();
+        clearTextFields();
         spellTree.setDisable(true);
         handlerMode = editMode.CREATE;
         
