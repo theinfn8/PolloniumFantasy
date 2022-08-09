@@ -30,7 +30,7 @@ public class SpellHandlerController implements Initializable
     spellsCollection gameSpellsList;
     spell selectedSpell;
     editMode handlerMode;
-    final String regex = "^[a-zA-Z0-9,+\\-\\s\\.\\(\\)\\:\\;\\%]+$";
+    final String regex = "^[a-zA-Z0-9,+\\-\\s\\.\\(\\)\\/\\:\\;\\%\\']+$";
     
     @FXML TreeView spellTree;
     @FXML TextField txtName, txtID, txtRange, txtDuration;
@@ -71,7 +71,7 @@ public class SpellHandlerController implements Initializable
         
         if (txtPPE.getText().isEmpty()) txtPPE.setText("0");
         
-        if (!isNumeric(txtPPE.getText()))
+        if (!txtPPE.getText().matches(regex))
         {
             System.out.println("PPE error");
             return true;
