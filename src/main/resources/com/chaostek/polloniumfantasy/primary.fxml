@@ -11,15 +11,15 @@
     <top>
         <ToolBar prefHeight="40">
             <items>
-                
+                <Button fx:id="createCharacter" text="Create" onAction="#switchToCharacterCreator"/>
+				<Button fx:id="viewCharacter" text="View Characters" onAction="#switchToCharacterViewer" />
+				<Button fx:id="editData" text="Edit Database" onAction="#switchToDataEditor" />
             </items>
         </ToolBar>
     </top>
     <center>
         <VBox >
-            <Button fx:id="skillsButton" text="Edit Skills" onAction="#switchToSkillHandler"/>
-            <Button fx:id="psionicsButton" text="Edit Psionics" onAction="#switchToPsionicHandler"/>
-            <Button fx:id="spellsButton" text="Edit Spells" onAction="#switchToSpellHandler"/>
+            
         </VBox>
     </center>
 </BorderPane>
