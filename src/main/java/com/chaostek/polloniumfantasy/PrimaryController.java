@@ -6,23 +6,18 @@ import javafx.fxml.FXML;
 public class PrimaryController {
 
     @FXML
-    private void switchToSkillHandler() throws IOException {
-        
-        App.setRoot("SkillHandler");
-        
-    }
-    
-    @FXML
-    private void switchToPsionicHandler() throws IOException
-    {
-        App.setRoot("PsionicHandler");
+    private void switchToCharacterCreator() throws IOException {
         
     }
 
     @FXML
-    private void switchToSpellHandler() throws IOException
-    {
-        App.setRoot("SpellHandler");
+    private void switchToCharacterViewer() throws IOException {
+        
+    }
+
+    @FXML
+    private void switchToDataEditor() throws IOException {
+        App.setRoot("DataEditor");
         
     }
 }

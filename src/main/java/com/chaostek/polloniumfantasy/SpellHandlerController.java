@@ -159,7 +159,7 @@ public class SpellHandlerController implements Initializable
     private void cmdSaveAsAction(ActionEvent event)
     {
         final FileChooser fc = new FileChooser();
-        fc.setTitle("Select Psionic XML File");
+        fc.setTitle("Select Spell XML File");
         //fc.setInitialDirectory(new File("./res"));
         fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML file", "*.xml"));
         
@@ -193,7 +193,7 @@ public class SpellHandlerController implements Initializable
     private void cmdOpenAction() throws IOException
     {
         final FileChooser fc = new FileChooser();
-        fc.setTitle("Select Skill XML File");
+        fc.setTitle("Select Spell XML File");
         //fc.setInitialDirectory(new File("./res"));
         fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML file", "*.xml"));
         
