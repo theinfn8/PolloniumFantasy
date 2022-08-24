@@ -23,7 +23,8 @@ import java.io.IOException;
 public class App extends Application {
 
     private static Scene scene;
-    
+    public static final String REGEX = "^[a-zA-Z0-9,+\\-\\s\\.\\(\\)\\/\\:\\;\\%\\']+$";
+
     @Override
     public void start(Stage stage) throws IOException {
         scene = new Scene(loadFXML("primary"), 800, 600);

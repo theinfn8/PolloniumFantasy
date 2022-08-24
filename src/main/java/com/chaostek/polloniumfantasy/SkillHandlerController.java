@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import java.io.File;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -12,7 +13,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TableView;
@@ -54,19 +54,14 @@ public class SkillHandlerController implements Initializable {
     @FXML
     private void cmdExitAction(ActionEvent event) throws IOException
     {
-        App.setRoot("primary");
+        App.setRoot("dataeditor");
         
     }
     
     @FXML
     private void cmdOpenAction(ActionEvent event)
     {
-        final FileChooser fc = new FileChooser();
-        fc.setTitle("Select Skill XML File");
-        //fc.setInitialDirectory(new File("./res"));
-        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML file", "*.xml"));
-        
-        File returnVal = fc.showOpenDialog(skillStage);
+        File returnVal = notification.getFile(skillStage, "Select an Item XML File", "XML file", "*.xml", "lib");
         
         if (returnVal != null)
         {
@@ -281,22 +276,19 @@ public class SkillHandlerController implements Initializable {
     }
     
     @FXML
-    private void cmdNewCatAction(ActionEvent event)
+    //private void cmdNewCatAction(ActionEvent event)
+    private void cmdNewCatAction(ActionEvent event) throws IOException
     {
-        if (txtName.getText().isEmpty())
+        Optional<String> result = notification.getStringInfo("Category Name", "Enter the name of the new category:");
+        if (result.isPresent() && result.get().matches(App.REGEX))
         {
-            System.out.println("You need a name for the category");
-            return;
-            
+            skill newCat = new skill();
+            newCat.setName(result.get());
+            newCat.setIsCat(true);
+            //newCat.setCategory(result.get());
+            skillTree.getRoot().getChildren().add(new TreeItem(newCat));
+            skillTree.refresh();
         }
-        
-        skill newCat = new skill();
-        newCat.generateUUID();
-        newCat.setName(txtName.getText());
-        newCat.setIsCat(true);
-        skillTree.getRoot().getChildren().add(new TreeItem(newCat));
-        skillTree.refresh();
-        
     }
     
     @FXML
@@ -384,7 +376,7 @@ public class SkillHandlerController implements Initializable {
         skillTree.setShowRoot(false);
         skillTree.setRoot(gameSkillsList.getRoot());
         
-        gameSkillsList.openXML("lib/PF-Core.xml");
+        gameSkillsList.openXML("lib/skills.xml");
         skillTree.setRoot(gameSkillsList.getRoot());
         skillTree.refresh();
             

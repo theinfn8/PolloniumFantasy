@@ -13,10 +13,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -30,7 +28,7 @@ public class SpellHandlerController implements Initializable
     spellsCollection gameSpellsList;
     spell selectedSpell;
     editMode handlerMode;
-    final String regex = "^[a-zA-Z0-9,+\\-\\s\\.\\(\\)\\/\\:\\;\\%\\']+$";
+    //final String regex = "^[a-zA-Z0-9,+\\-\\s\\.\\(\\)\\/\\:\\;\\%\\']+$";
     
     @FXML TreeView spellTree;
     @FXML TextField txtName, txtID, txtRange, txtDuration;
@@ -42,12 +40,12 @@ public class SpellHandlerController implements Initializable
     
     private boolean areEntriesBad()
     {
-        if (txtName.getText().isEmpty() || !txtName.getText().matches(regex))
+        if (txtName.getText().isEmpty() || !txtName.getText().matches(App.REGEX))
         { 
             System.out.println("Name error");
             return true;
         }
-        if (txtRange.getText().isEmpty() || !txtRange.getText().matches(regex))
+        if (txtRange.getText().isEmpty() || !txtRange.getText().matches(App.REGEX))
         {
             System.out.println("Range error");
             return true;
@@ -71,13 +69,12 @@ public class SpellHandlerController implements Initializable
         
         if (txtPPE.getText().isEmpty()) txtPPE.setText("0");
         
-        if (!txtPPE.getText().matches(regex))
+        if (!txtPPE.getText().matches(App.REGEX))
         {
             System.out.println("PPE error");
             return true;
         }
         
-        //if (!txtText.getText().matches(regex)) return true;
         if (txtText.getText() == null) txtText.setText(txtName.getText());
         if (txtText.getText().isEmpty()) txtText.setText(txtName.getText());
         
@@ -158,13 +155,8 @@ public class SpellHandlerController implements Initializable
     @FXML
     private void cmdSaveAsAction(ActionEvent event)
     {
-        final FileChooser fc = new FileChooser();
-        fc.setTitle("Select Spell XML File");
-        //fc.setInitialDirectory(new File("./res"));
-        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML file", "*.xml"));
-        
-        //File returnVal = fc.showOpenDialog(skillStage);
-        File returnVal = fc.showSaveDialog(spellStage);
+        File returnVal = notification.getSaveAsFile(spellStage, "Select an Item XML File", "XML file", "*.xml");
+
         
         if (returnVal != null)
         {
@@ -185,19 +177,14 @@ public class SpellHandlerController implements Initializable
     @FXML
     private void cmdExitAction() throws IOException
     {
-        App.setRoot("primary");
+        App.setRoot("dataeditor");
         
     }
     
     @FXML
     private void cmdOpenAction() throws IOException
     {
-        final FileChooser fc = new FileChooser();
-        fc.setTitle("Select Spell XML File");
-        //fc.setInitialDirectory(new File("./res"));
-        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML file", "*.xml"));
-        
-        File returnVal = fc.showOpenDialog(spellStage);
+        File returnVal = notification.getFile(spellStage, "Select an Item XML File", "XML file", "*.xml");
         
         if (returnVal != null)
         {
@@ -234,18 +221,8 @@ public class SpellHandlerController implements Initializable
     @FXML
     private void cmdNewCatAction() throws IOException
     {
-        /*if (txtName.getText().isEmpty())
-        {
-            System.out.println("You need a name for the category");
-            return;
-            
-        }
-        */
-        TextInputDialog inputDialog = new TextInputDialog();
-        inputDialog.setContentText("Enter the name of the category:");
-        inputDialog.setHeaderText("Name required");
-        Optional<String> result = inputDialog.showAndWait();
-        if (result.isPresent() && result.get().matches(regex))
+        Optional<String> result = notification.getStringInfo("Category Name", "Enter the name of the new category:");
+        if (result.isPresent() && result.get().matches(App.REGEX))
         {
             spell newCat = new spell();
             newCat.generateUUID();

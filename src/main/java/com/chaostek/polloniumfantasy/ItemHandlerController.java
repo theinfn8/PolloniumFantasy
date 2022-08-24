@@ -13,7 +13,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.stage.FileChooser;
@@ -29,7 +28,7 @@ public class ItemHandlerController implements Initializable
     itemsCollection gameItemsList;
     item selectedItem;
     editMode handlerMode;
-    final String regex = "^[a-zA-Z0-9,+\\-\\s\\.\\(\\)\\/\\:\\;\\%\\']+$";
+    //final String regex = "^[a-zA-Z0-9,+\\-\\s\\.\\(\\)\\/\\:\\;\\%\\']+$";
     
     @FXML TreeView itemTree;
     @FXML TextField txtName, txtPrice, txtCategory, txtWeight;
@@ -40,9 +39,10 @@ public class ItemHandlerController implements Initializable
     
     private boolean areEntriesBad()
     {
-        if (txtName.getText().isEmpty() || !txtName.getText().matches(regex))
+        if (txtName.getText().isEmpty() || !txtName.getText().matches(App.REGEX))
         { 
-            System.out.println("Name error");
+            //System.out.println("Name error");
+            notification.generateErrorMessage("Input Error", "Name is empty or contains an illegal character");
             return true;
         }
         
@@ -52,12 +52,29 @@ public class ItemHandlerController implements Initializable
             
         }
         
-        if (!txtPrice.getText().matches(regex))
+        if (!txtPrice.getText().matches(App.REGEX))
         {
             System.out.println("Price Error");
         }
         
-        if (txtCategory.getText().isEmpty() || !txtCategory.getText().matches(regex))
+        if (txtCategory.getText().isEmpty())
+        {
+            if (gameItemsList.root.getChildren().isEmpty())
+            {
+                System.out.println("No category with an empty list");
+                return true;
+            }
+            
+            if (selectedItem.isCat())
+            {
+                txtCategory.setText(selectedItem.getName());
+            }
+            else
+            {
+                txtCategory.setText(selectedItem.getCategory());
+            }
+        }
+        if (!txtCategory.getText().matches(App.REGEX))
         {
             System.out.println("Category error");
             return true;
@@ -68,7 +85,7 @@ public class ItemHandlerController implements Initializable
             txtWeight.setText("0");
         }
         
-        if (!txtWeight.getText().matches(regex))
+        if (!txtWeight.getText().matches(App.REGEX))
         {
             System.out.println("Weight Error");
             return true;
@@ -78,12 +95,6 @@ public class ItemHandlerController implements Initializable
         if (txtText.getText().isEmpty()) txtText.setText(txtName.getText());
         
         return false;
-    }
-    
-    private boolean isNumeric(String strNum)
-    {
-        return strNum.matches("\\d+");
-        
     }
     
     private void clearTextFields()
@@ -140,13 +151,7 @@ public class ItemHandlerController implements Initializable
     @FXML
     private void cmdSaveAsAction(ActionEvent event)
     {
-        final FileChooser fc = new FileChooser();
-        fc.setTitle("Select Item XML File");
-        //fc.setInitialDirectory(new File("./res"));
-        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML file", "*.xml"));
-        
-        //File returnVal = fc.showOpenDialog(skillStage);
-        File returnVal = fc.showSaveDialog(itemStage);
+        File returnVal = notification.getSaveAsFile(itemStage, "Select an Item XML File", "XML file", "*.xml");
         
         if (returnVal != null)
         {
@@ -167,19 +172,14 @@ public class ItemHandlerController implements Initializable
     @FXML
     private void cmdExitAction() throws IOException
     {
-        App.setRoot("primary");
+        App.setRoot("dataeditor");
         
     }
     
     @FXML
     private void cmdOpenAction() throws IOException
     {
-        final FileChooser fc = new FileChooser();
-        fc.setTitle("Select Item XML File");
-        //fc.setInitialDirectory(new File("./res"));
-        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML file", "*.xml"));
-        
-        File returnVal = fc.showOpenDialog(itemStage);
+        File returnVal = notification.getFile(itemStage, "Select an Item XML File", "XML file", "*.xml");
         
         if (returnVal != null)
         {
@@ -216,11 +216,8 @@ public class ItemHandlerController implements Initializable
     @FXML
     private void cmdNewCatAction() throws IOException
     {
-        TextInputDialog inputDialog = new TextInputDialog();
-        inputDialog.setContentText("Enter the name of the category:");
-        inputDialog.setHeaderText("Name required");
-        Optional<String> result = inputDialog.showAndWait();
-        if (result.isPresent() && result.get().matches(regex))
+        Optional<String> result = notification.getStringInfo("Category Name", "Enter the name of the new category:");
+        if (result.isPresent() && result.get().matches(App.REGEX))
         {
             item newCat = new item();
             newCat.setName(result.get());
@@ -243,6 +240,12 @@ public class ItemHandlerController implements Initializable
     @FXML
     private void cmdUpdateAction() throws IOException
     {
+        if (gameItemsList.root.getChildren().isEmpty())
+        {
+            System.out.println("Nothing to update");
+            return;
+        }
+        
         itemTree.setDisable(true);
         actionButtonsOff();
 
@@ -264,7 +267,12 @@ public class ItemHandlerController implements Initializable
                 
             case CREATE:
                 // Add new item
-                System.out.println("Made it to create");
+                if (gameItemsList.root.getChildren().isEmpty() && (txtCategory.getText().isBlank() || txtCategory.getText().isEmpty()))
+                {
+                    System.out.println("Can't create when empty and with no category");
+                    return;
+                }
+                
                 if (areEntriesBad())
                 {
                     System.out.println("Bad entries?");
@@ -280,7 +288,7 @@ public class ItemHandlerController implements Initializable
                 newItem.setWeight(txtWeight.getText());
                 newItem.setDescription(txtText.getText());
 
-                TreeItem<item> foundCat = gameItemsList.findCat(currentItem.getValue().getCategory());
+                TreeItem<item> foundCat = gameItemsList.findCat(newItem.getCategory());
                 foundCat.getChildren().add(new TreeItem(newItem));
                 
                 itemTree.refresh();
@@ -289,6 +297,7 @@ public class ItemHandlerController implements Initializable
                 
             case UPDATE:
                 // Update item
+                
                 if (areEntriesBad())
                 {
                     System.out.println("Text entries are incorrect");

@@ -13,7 +13,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.stage.FileChooser;
@@ -29,7 +28,6 @@ public class PsionicHandlerController implements Initializable
     psionicsCollection gamePsionicsList;
     psionic selectedPsionic;
     editMode handlerMode;
-    final String regex = "^[a-zA-Z0-9,+\\-\\s\\.]+$";
     
     @FXML TreeView psionicTree;
     @FXML TextField txtName, txtRange, txtDuration;
@@ -41,12 +39,12 @@ public class PsionicHandlerController implements Initializable
     
     private boolean areEntriesBad()
     {
-        if (txtName.getText().isEmpty() || !txtName.getText().matches(regex))
+        if (txtName.getText().isEmpty() || !txtName.getText().matches(App.REGEX))
         { 
             System.out.println("Name error");
             return true;
         }
-        if (txtRange.getText().isEmpty() || !txtRange.getText().matches(regex))
+        if (txtRange.getText().isEmpty() || !txtRange.getText().matches(App.REGEX))
         {
             System.out.println("Range error");
             return true;
@@ -66,7 +64,7 @@ public class PsionicHandlerController implements Initializable
             return true;
         }
         
-        //if (!txtText.getText().matches(regex)) return true;
+        //if (!txtText.getText().matches(App.REGEX)) return true;
         if (txtText.getText() == null) txtText.setText(txtName.getText());
         if (txtText.getText().isEmpty()) txtText.setText(txtName.getText());
         
@@ -137,19 +135,14 @@ public class PsionicHandlerController implements Initializable
     @FXML
     private void cmdExitAction() throws IOException
     {
-        App.setRoot("primary");
+        App.setRoot("dataeditor");
         
     }
     
     @FXML
     private void cmdOpenAction() throws IOException
     {
-        final FileChooser fc = new FileChooser();
-        fc.setTitle("Select Skill XML File");
-        //fc.setInitialDirectory(new File("./res"));
-        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML file", "*.xml"));
-        
-        File returnVal = fc.showOpenDialog(psionicStage);
+        File returnVal = notification.getFile(psionicStage, "Select an Item XML File", "XML file", "*.xml");
         
         if (returnVal != null)
         {
@@ -170,13 +163,8 @@ public class PsionicHandlerController implements Initializable
     @FXML
     private void cmdSaveAsAction(ActionEvent event)
     {
-        final FileChooser fc = new FileChooser();
-        fc.setTitle("Select Psionic XML File");
-        //fc.setInitialDirectory(new File("./res"));
-        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML file", "*.xml"));
-        
-        //File returnVal = fc.showOpenDialog(skillStage);
-        File returnVal = fc.showSaveDialog(psionicStage);
+        File returnVal = notification.getSaveAsFile(psionicStage, "Select an Item XML File", "XML file", "*.xml");
+
         
         if (returnVal != null)
         {
@@ -213,11 +201,8 @@ public class PsionicHandlerController implements Initializable
     @FXML
     private void cmdNewCatAction() throws IOException
     {
-        TextInputDialog inputDialog = new TextInputDialog();
-        inputDialog.setContentText("Enter the name of the category:");
-        inputDialog.setHeaderText("Name required");
-        Optional<String> result = inputDialog.showAndWait();
-        if (result.isPresent() && result.get().matches(regex))
+        Optional<String> result = notification.getStringInfo("Category Name", "Enter the name of the new category:");
+        if (result.isPresent() && result.get().matches(App.REGEX))
         {
             psionic newCat = new psionic();
             newCat.generateUUID();
